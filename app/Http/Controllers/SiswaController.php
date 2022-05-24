@@ -15,9 +15,10 @@ class SiswaController extends Controller
      */
     public function index()
     {
-       $siswa = Siswa::paginate();
-
-       return view('siswa/index', compact('siswa'));
+       $datas = Siswa::all();
+       return view('siswa.index', compact(
+           'datas'
+       ));
     }
 
     /**
@@ -27,7 +28,7 @@ class SiswaController extends Controller
      */
     public function create()
     {
-        //
+        return view('siswa.create');
     }
 
     /**
@@ -38,7 +39,10 @@ class SiswaController extends Controller
      */
     public function store(StoreSiswaRequest $request)
     {
-        //
+        // dd($request->all());
+        $siswa = Siswa::create($request->all());
+
+        return redirect('/siswa');
     }
 
     /**
@@ -47,9 +51,9 @@ class SiswaController extends Controller
      * @param  \App\Models\Siswa  $siswa
      * @return \Illuminate\Http\Response
      */
-    public function show(Siswa $siswa)
+    public function show($id)
     {
-        //
+
     }
 
     /**
@@ -58,9 +62,10 @@ class SiswaController extends Controller
      * @param  \App\Models\Siswa  $siswa
      * @return \Illuminate\Http\Response
      */
-    public function edit(Siswa $siswa)
+    public function edit($id)
     {
-        //
+        $siswa = Siswa::find($id);
+        return view('siswa.edit', compact('siswa'));
     }
 
     /**
@@ -70,19 +75,41 @@ class SiswaController extends Controller
      * @param  \App\Models\Siswa  $siswa
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateSiswaRequest $request, Siswa $siswa)
-    {
-        //oooooooo
-    }
-
+    public function update(UpdateSiswaRequest $request, $id)
+   {
+       $siswa = Siswa::find($id);
+       $siswa->nama = $request-> input('nama'); 
+       $siswa->jurusan = $request-> input('jurusan'); 
+       $siswa->nis = $request-> input('nis'); 
+       $siswa-> update();
+       return redirect('siswa');
+   }
     /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\Siswa  $siswa
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Siswa $siswa)
-    {
+    public function destroy($id)
+    { $siswa = siswa::findOrFail($id);
+        $siswa->delete();
+        
+
+        if ($siswa) {
+            return redirect()
+            ->route('siswa.index')
+            ->with([
+                'success' => 'data has been deleted'
+            ]);
+            
+        } 
+        else {
+            return redirect()
+            ->route('siswa.index')
+            ->with([
+                'error' => 'There is something went wrong, try again later'
+            ]);
+        }
         //
     }
 }

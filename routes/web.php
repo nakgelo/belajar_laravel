@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\SiswaController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,18 +16,37 @@ use App\Http\Controllers\HomeController;
 |
 */
 
+
+
 // Data siswa
-Route::get('/siswa', function () {
-    return view('siswa');
-});
+//Route::get('/siswa', function () {
+  //  return view('siswa.index', ['siswa' => App\Siswa::all()]);
+//});
+
+//EDIT
+//Route::post('/siswa/update', function (){
+    //return view('siswa.edit');
+//});
+
 
 // Awalan
 Route::get('/', function () {
     return view('welcome');
 });
 
+// Profile
+Route::get('/profile', function () {
+    return view('siswa.profile', ['user' => Auth::User()]);
+})->middleware(['auth'])->name('profile');
+
 // Lists
-Route::resource('siswa', \App\Http\Controllers\SiswaController::class );
+Route::resource('siswa', SiswaController::class );
+
+// Create maybe??
+//Route::post('/siswa/store', [SiswaController::class, 'store']);
+
+// Delete
+//Route::get('/siswa/delete{id}', 'SiswaController@destroy');
 
 // Dashboard
 Route::get('/dashboard', function () {
@@ -34,3 +54,4 @@ Route::get('/dashboard', function () {
 })->middleware(['auth'])->name('dashboard');
 
 require __DIR__.'/auth.php';
+
